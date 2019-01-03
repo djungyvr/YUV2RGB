@@ -9,8 +9,10 @@ int main(int argc, char *argv[])
 
 	// Buffer size calculated by the fact that it expects 2 bytes per pixel
 	const int YUV_BUFFER_SIZE = 1920*1080*2;
+	const int RGB_BUFFER_SIZE = 1920*1080*3;
 
-	char *yuvBuffer = (char*) malloc(YUV_BUFFER_SIZE);
+	char *yuvBuffer = new char[YUV_BUFFER_SIZE];
+	char *rgbBuffer = new char[RGB_BUFFER_SIZE];
 
 	// Creates a 3 channel image
 	cv::Mat rgbMat( height, width, CV_8UC3 );
@@ -24,16 +26,17 @@ int main(int argc, char *argv[])
 	infile.read(yuvBuffer, YUV_BUFFER_SIZE);
 
 	// convert buffer into a mat of 2 channels
-	cv::Mat yuvMat( height, width, CV_8UC2, yuvBuffer );
+	cv::Mat yuvMat(height, width, CV_8UC2, yuvBuffer);
 
 	// convert the yuv image to rgb
-	cv::cvtColor( yuvMat, rgbMat, CV_YUV2BGR_YUYV );
+	cv::cvtColor(yuvMat, rgbMat, CV_YUV2BGR_YUYV);
 
-	cv::imwrite( outputFileName, rgbMat );
+	cv::imwrite(outputFileName, rgbMat);
 
 	// cleanup
 	yuvMat.release();
 	rgbMat.release();
-	delete [] yuvBuffer;
+	delete[] yuvBuffer;
+	delete[] rgbBuffer;
 	return 0;
 }
